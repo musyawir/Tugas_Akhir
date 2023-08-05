@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "123001210665",
+    "firebase_url": "https://monitoring-pir-dan-debu-default-rtdb.firebaseio.com",
+    "project_id": "monitoring-pir-dan-debu",
+    "storage_bucket": "monitoring-pir-dan-debu.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:123001210665:android:c29052cd01272323845938",
+        "android_client_info": {
+          "package_name": "com.example.apk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "123001210665-ud95hgtsh222b9kdoiqk1l99286pi88e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQPwFRZGBJ3GF61cuLjFFKEhp-BrNfyFc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "123001210665-ud95hgtsh222b9kdoiqk1l99286pi88e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
