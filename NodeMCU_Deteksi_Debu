@@ -1,0 +1,95 @@
+//NodeMCU_Debu_FIREBASE
+#include <ESP8266WiFi.h>
+#include <SoftwareSerial.h>
+#include <FirebaseESP8266.h>
+
+SoftwareSerial serial(D6, D7); // RX, TX 
+
+// Konfigurasi WiFi
+const char* ssid = "P";
+const char* password = "qqqqqqqq";
+
+// Konfigurasi Firebase
+#define FIREBASE_HOST "monitoring-pir-dan-debu-defaultrtdb.firebaseio.com"
+#define FIREBASE_AUTH "qN4qgboOwnYODm5opte75i3GVSiurcem9AjmN6jY"
+
+// Inisialisasi WiFi dan Firebase
+WiFiClient client;
+FirebaseData firebaseData;
+
+const int numSensors = 8;
+String sensorLabels[numSensors] = {"sensor1", "sensor2", "sensor3", "sensor4", "sensor5", "sensor6", "sensor7", "sensor8"};
+
+void setup() {
+  Serial.begin(9600);
+  serial.begin(9600);
+
+  // Menghubungkan ke jaringan WiFi
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println();
+  Serial.print("Terhubung ke WiFi dengan alamat IP: ");
+  Serial.println(WiFi.localIP());
+
+  // Menginisialisasi Firebase
+  Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
+}
+
+void loop() {
+  if (serial.available() > 0) {
+    String data = serial.readStringUntil('\n');
+    data.trim();
+
+    if (data.length() > 0) {
+      Serial.println("Data diterima dari Arduino Mega: " + data);
+
+      // Pisahkan data berdasarkan tanda koma
+      String sensorData[numSensors];
+      int dataIndex = 0;
+      int start = 0;
+      int end = data.indexOf(",");
+
+      while (end != -1) {
+        sensorData[dataIndex++] = data.substring(start, end);
+        start = end + 1;
+        end = data.indexOf(",", start);
+      }
+
+      if (dataIndex < numSensors) {
+        sensorData[dataIndex] = data.substring(start);
+      }
+
+      // Kirim data ke Firebase
+      for (int i = 0; i < numSensors; i++) {
+        String firebasePath = "/" + sensorLabels[i];
+        Firebase.setString(firebaseData, firebasePath.c_str(), sensorData[i]);
+
+        if (firebaseData.dataAvailable()) {
+          Serial.println("Data dari " + sensorLabels[i] + " berhasil dikirim ke Firebase.");
+        } else {
+          Serial.println("Gagal mengirim data dari " + sensorLabels[i] + " ke Firebase.");
+          Serial.println("Alasan: " + firebaseData.errorReason());
+        }
+      }
+
+      // Tampilkan data yang dikirim ke Firebase
+      Serial.println("Data yang dikirim ke Firebase:");
+      for (int i = 0; i < numSensors; i++) {
+        String firebasePath = "/" + sensorLabels[i];
+        Firebase.getString(firebaseData, firebasePath.c_str());
+
+        if (firebaseData.dataAvailable()) {
+          String firebaseValue = firebaseData.stringData();
+          Serial.println(sensorLabels[i] + ": " + firebaseValue);
+        } else {
+          Serial.println("Gagal membaca data dari " + sensorLabels[i]);
+          Serial.println("Alasan: " + firebaseData.errorReason());
+        }
+      }
+      Serial.println();
+    }
+  }
+}
