@@ -1,0 +1,109 @@
+//NodeMCU_PIR_FIREBASE
+#include <ESP8266WiFi.h>
+#include <FirebaseESP8266.h>
+#include <SoftwareSerial.h>
+#define FIREBASE_HOST "monitoring-pir-dan-debu-defaultrtdb.firebaseio.com"
+#define FIREBASE_AUTH "qN4qgboOwnYODm5opte75i3GVSiurcem9AjmN6jY"
+#define WIFI_SSID "P"
+#define WIFI_PASSWORD "qqqqqqqq"
+
+const int RX = D6;
+const int TX = D5;
+
+SoftwareSerial serial(RX, TX);
+
+FirebaseData firebaseData;
+
+void setup() {
+  Serial.begin(9600);
+  serial.begin(9600);
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+    Serial.println("Connecting to WiFi ...");
+  }
+  Serial.println();
+  Serial.println("WiFi Connected");
+  
+  Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
+  Serial.println("Firebase Connected");
+}
+
+void loop() {
+  if (serial.available()) {
+    int value = serial.read();
+    
+    if (value == '1') {
+      Firebase.setInt(firebaseData, "Nilai_Sensor", 1);
+      Firebase.setString(firebaseData, "Ruangan1", "Terdeteksi Tikus1");
+    } else if (value == '0') {
+      Firebase.setInt(firebaseData, "Nilai_Sensor", 0);
+      Firebase.setString(firebaseData, "Ruangan1", "Ruangan Aman1");
+    }
+    
+    if (value == '3') {
+      Firebase.setInt(firebaseData, "Nilai_Sensor_2", 1);
+      Firebase.setString(firebaseData, "Ruangan2", "Terdeteksi Tikus2");
+    } else if (value == '2') {
+      Firebase.setInt(firebaseData, "Nilai_Sensor_2", 0);
+      Firebase.setString(firebaseData, "Ruangan2", "Ruangan Aman2");
+    }
+
+    if (value == '5') {
+      Firebase.setInt(firebaseData, "Nilai_Sensor_3", 1);
+      Firebase.setString(firebaseData, "Ruangan3", "Terdeteksi Tikus3");
+    } else if (value == '4') {
+      Firebase.setInt(firebaseData, "Nilai_Sensor_3", 0);
+      Firebase.setString(firebaseData, "Ruangan3", "Ruangan Aman3");
+    }
+
+    if (value == '7') {
+      Firebase.setInt(firebaseData, "Nilai_Sensor_4", 1);
+      Firebase.setString(firebaseData, "Ruangan4", "Terdeteksi Tikus4");
+    } else if (value == '6') {
+      Firebase.setInt(firebaseData, "Nilai_Sensor_4", 0);
+      Firebase.setString(firebaseData, "Ruangan4", "Ruangan Aman4");
+    }
+
+    if (value == '9') {
+      Firebase.setInt(firebaseData, "Nilai_Sensor_5", 1);
+      Firebase.setString(firebaseData, "Ruangan5", "Terdeteksi Tikus5");
+    } else if (value == '8') {
+      Firebase.setInt(firebaseData, "Nilai_Sensor_5", 0);
+      Firebase.setString(firebaseData, "Ruangan5", "Ruangan Aman5");
+    }
+
+    if (value == 'b') {
+      Firebase.setInt(firebaseData, "Nilai_Sensor_6", 1);
+      Firebase.setString(firebaseData, "Ruangan6", "Terdeteksi Tikus6");
+    } else if (value == 'a') {
+      Firebase.setInt(firebaseData, "Nilai_Sensor_6", 0);
+      Firebase.setString(firebaseData, "Ruangan6", "Ruangan Aman6");
+    }
+
+    if (value == 'd') {
+      Firebase.setInt(firebaseData, "Nilai_Sensor_7", 1);
+      Firebase.setString(firebaseData, "Ruangan7", "Terdeteksi Tikus7");
+    } else if (value == 'c') {
+      Firebase.setInt(firebaseData, "Nilai_Sensor_7", 0);
+      Firebase.setString(firebaseData, "Ruangan7", "Ruangan Aman7");
+    }
+
+    if (value == 'z') {
+      Firebase.setInt(firebaseData, "Nilai_Sensor_8", 1);
+      Firebase.setString(firebaseData, "Ruangan8", "Terdeteksi Tikus8");
+    } else if (value == 'y') {
+      Firebase.setInt(firebaseData, "Nilai_Sensor_8", 0);
+      Firebase.setString(firebaseData, "Ruangan8", "Ruangan Aman8");
+    }
+
+    if (value == 't') {
+      Firebase.setInt(firebaseData, "Nilai_Sensor_9", 1);
+      Firebase.setString(firebaseData, "Ruangan9", "Terdeteksi Tikus9");
+    } else if (value == 'f') {
+      Firebase.setInt(firebaseData, "Nilai_Sensor_9", 0);
+      Firebase.setString(firebaseData, "Ruangan9", "Ruangan Aman9");
+    }
+  }
+  delay(3000);
+}
